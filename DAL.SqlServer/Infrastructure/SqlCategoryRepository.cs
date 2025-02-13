@@ -5,13 +5,9 @@ using Repository.Repositories;
 
 namespace DAL.SqlServer.Infrastructure;
 
-public class SqlCategoryRepository : BaseSqlRepository, ICategoryRepository
+public class SqlCategoryRepository(string connectionString, AppDbContext context) : BaseSqlRepository(connectionString), ICategoryRepository
 {
-    private readonly AppDbContext _context;
-    public SqlCategoryRepository(string connectionString, AppDbContext context) : base(connectionString)
-    {
-        _context = context;
-    }
+    private readonly AppDbContext _context = context;
 
     public async Task AddAsync(Category category)
     {
@@ -51,20 +47,20 @@ public class SqlCategoryRepository : BaseSqlRepository, ICategoryRepository
         return await conn.QueryAsync<Category>(sql, name);
     }
 
-    public async Task<bool> Remove(int id, int deletedBy)
+    public async Task<bool> Remove(int id, int? deletedBy)
     {
         var checkSql = "SELECT Id FROM Categories WHERE Id=@id AND IsDeleted=0";
 
         var sql = @"UPDATE Categories
-                    SET IsDeleted=1
-                    DeletedBy= @deletedBy
+                SET IsDeleted=1, 
+                    DeletedBy= @deletedBy, 
                     DeletedDate = GETDATE()
-                    Where Id=@id";
+                WHERE Id=@id";
 
         using var conn = OpenConnection();
         using var transaction = conn.BeginTransaction();
 
-        var categoryId = await conn.ExecuteScalarAsync<int?>(checkSql, id, transaction);
+        var categoryId = await conn.ExecuteScalarAsync<int?>(checkSql, new { id }, transaction);
 
         if (!categoryId.HasValue)
             return false;
@@ -74,8 +70,8 @@ public class SqlCategoryRepository : BaseSqlRepository, ICategoryRepository
         transaction.Commit();
 
         return affectedRow > 0;
-
     }
+
 
     public async Task Update(Category category)
     {

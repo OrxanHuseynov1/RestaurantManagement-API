@@ -25,7 +25,7 @@ public class CreateCategoryHandler(IUnitOfWork unitOfWork) : IRequestHandler<Cre
             {
                 Data = null,
                 Errors = ["Gonderilen melumat bosh ve ya null ola bilmez"],
-                IsSuccess = false
+                IsSuccess = false,
             };
         }
 

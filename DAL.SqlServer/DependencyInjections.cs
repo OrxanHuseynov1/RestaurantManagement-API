@@ -2,6 +2,7 @@
 using DAL.SqlServer.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Repository.Common;
 
 namespace DAL.SqlServer;
 

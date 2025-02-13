@@ -1,7 +1,7 @@
 ﻿namespace Application.CQRS.Categories.Commands.Responses;
 
-public class CreateCategoryResponse
+public class DeleteCategoryResponse
 {
     public int Id { get; set; }
-    public string? Name { get; set; }
+    public int DeletedBy { get; set; }
 }
