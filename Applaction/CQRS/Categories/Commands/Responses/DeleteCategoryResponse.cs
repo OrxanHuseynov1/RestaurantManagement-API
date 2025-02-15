@@ -2,6 +2,5 @@
 
 public class DeleteCategoryResponse
 {
-    public int Id { get; set; }
-    public int DeletedBy { get; set; }
+    public string? Message { get; set; }
 }

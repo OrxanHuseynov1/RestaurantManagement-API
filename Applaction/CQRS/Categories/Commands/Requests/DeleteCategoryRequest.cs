@@ -4,8 +4,7 @@ using MediatR;
 
 namespace Application.CQRS.Categories.Commands.Requests;
 
-public class DeleteCategoryRequest : IRequest<ResponseModel<DeleteCategoryResponse>>
+public record struct DeleteCategoryRequest : IRequest<ResponseModel<DeleteCategoryResponse>>
 {
     public int Id { get; set; }
-    public int DeletedBy { get; set; }
 }

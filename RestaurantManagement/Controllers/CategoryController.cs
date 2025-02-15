@@ -1,5 +1,6 @@
 ﻿using Applaction.CQRS.Categories.Commands.Requests;
 using Application.CQRS.Categories.Commands.Requests;
+using Application.CQRS.Categories.Queries.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,32 +13,28 @@ public class CategoryController(ISender sender) : ControllerBase
     private readonly ISender _sender = sender;
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateCategoryRequest request)
+    public async Task<IActionResult> Create(CreateCategoryRequest request)
     {
-        var response = await _sender.Send(request);
-        return Ok(response);
+        return Ok(await _sender.Send(request));
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var request = new GetByIdCategoryRequest() { Id = id };
+        return Ok(await _sender.Send(request));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll([FromQuery] GetAllCategoryRequest request)
+    {
+        return Ok(await _sender.Send(request));
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id, [FromQuery] int deletedBy)
+    public async Task<IActionResult> Delete(int id)
     {
-        if (id <= 0)
-        {
-            return BadRequest(new { message = "Geçersiz kategori ID" });
-        }
-
-        var request = new DeleteCategoryRequest
-        {
-            DeletedBy = deletedBy
-        };
-
-        var response = await _sender.Send(request);
-
-        if (!response.IsSuccess)
-        {
-            return BadRequest(new { errors = response.Errors });
-        }
-
-        return Ok(response);
+        var request = new DeleteCategoryRequest() { Id = id };
+        return Ok(await _sender.Send(request));
     }
 }

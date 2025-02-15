@@ -11,31 +11,12 @@ namespace Application.CQRS.Categories.Handlers.CommandHandlers;
 public class DeleteCategoryHandler(IUnitOfWork unitOfWork) : IRequestHandler<DeleteCategoryRequest, ResponseModel<DeleteCategoryResponse>>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
     public async Task<ResponseModel<DeleteCategoryResponse>> Handle(DeleteCategoryRequest request, CancellationToken cancellationToken)
     {
-        var category = await _unitOfWork.CategoryRepository.GetByIdAsync(request.Id);
-
-        if (category == null)
-        {
-            return new ResponseModel<DeleteCategoryResponse>
-            {
-                Data = null,
-                Errors = ["Daxil Edilen Id-e uygun Categori Tapilmadi "],
-                IsSuccess = false,
-            };
-        }
-
-        await _unitOfWork.CategoryRepository.Remove(category.Id, request.DeletedBy);
-        //await _unitOfWork.SaveChangesAsync();
-
+        await _unitOfWork.CategoryRepository.Remove(request.Id, 0);
         return new ResponseModel<DeleteCategoryResponse>
         {
-            Data = new DeleteCategoryResponse
-            {
-                Id = category.Id,
-                DeletedBy = request.DeletedBy
-            },
+            Data = new DeleteCategoryResponse { Message = "Deleted Successfully!" },
             Errors = [],
             IsSuccess = true
         };
