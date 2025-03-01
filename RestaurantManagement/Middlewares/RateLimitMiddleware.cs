@@ -19,7 +19,7 @@ public class RateLimitMiddleware(RequestDelegate next, int requestLimit, TimeSpa
 
         var ep = context.GetEndpoint()?.DisplayName;
         var now = DateTime.UtcNow;
-        var requestLog = _requiredTimes.GetOrAdd(ep, new List<DateTime>());
+        var requestLog = _requiredTimes.GetOrAdd(ep, []);
         lock (requestLog)
         {
             requestLog.RemoveAll(timeStamp => timeStamp <= now - _timeSpan);

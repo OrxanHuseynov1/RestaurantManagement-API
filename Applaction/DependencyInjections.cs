@@ -12,7 +12,6 @@ public static class DependencyInjections
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        #region AutoMapper
         var mapperConfig = new MapperConfiguration(mc =>
         {
             mc.AddProfile(new MappingProfile());
@@ -20,7 +19,6 @@ public static class DependencyInjections
 
         IMapper mapper = mapperConfig.CreateMapper();
         services.AddSingleton(mapper);
-        #endregion
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
